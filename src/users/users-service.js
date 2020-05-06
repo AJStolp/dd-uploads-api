@@ -18,11 +18,6 @@ const usersService = {
         return knex('users')
             .where({id})
             .delete()
-    },
-    updateUsers(knex, id, newUserFields){
-        return knex('users')
-            .where({id})
-            .update(newUserFields)
     }
 }
 

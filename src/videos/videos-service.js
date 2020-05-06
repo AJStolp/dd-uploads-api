@@ -2,9 +2,9 @@ const videosService = {
     getAllVideos(knex) {
         return knex.select('*').from('uploaded_videos')
     },
-    insertVideos(knex, newFolder) {
+    insertVideos(knex, newVideo) {
         return knex
-            .insert(newFolder)
+            .insert(newVideo)
             .into('uploaded_videos')
             .returning('*')
             .then(rows => {

@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const usersService = require('./users-service');
 
-const foldersRouter = express.Router();
+const usersRouter = express.Router();
 const jsonParser = express.json();
 
 const serializeUser = user => ({
@@ -45,7 +45,7 @@ usersRouter
             .catch(next)
     })
 
-foldersRouter
+usersRouter
     .route('/:user_id')
     .all((req, res, next) => {
         usersService.getById(
@@ -58,7 +58,7 @@ foldersRouter
                     error: { message: `User does not exist` }
                 })
             }
-            res.user = folder;
+            res.user = user;
             next()
         })
         .catch(next)
@@ -68,29 +68,8 @@ foldersRouter
         res.json(serializeUser(res.user))
     })
 
-    .patch(jsonParser, (req ,res, next) => {
-        const { email, password } = req.body;
-        const updatedUser = { email, password };
-
-        const numberOfValuesEmail = Object.values(updatedUser).length
-        if(numberOfValuesEmail === 0 ) {
-            return res.status(400).json({
-                error: { message: `The new user needs an email` }
-            });
-        }
-
-        usersService.updateUsers(
-            req.app.get('db'),
-            updatedUser
-        )
-        .then(userEffected => {
-            res.status(200).end()
-        })
-        .catch(next)
-    })
-
     .delete((req, res, next) => {
-        foldersService.deleteUsers(
+        usersService.deleteUsers(
             req.app.get('db'),
             req.params.user_id
         )
