@@ -1,9 +1,23 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const videosService = require('./videos-service');
+const cloudinary = require('cloudinary');
 
 const videosRouter = express.Router();
 const jsonParser = express.json();
+
+//Cloudinary is used to upload videos and delivery them through a cdn
+
+cloudinary.config({
+    cloud_name: process.env.cloudinary_cloud_name,
+    api_key: process.env.cloudinary_api_key,
+    api_secret: process.env.cloudinary_api_secret,
+});
+
+cloudinary.v2.uploader.upload(file, 
+    { resource_type: "video"},
+    function(error, result) { console.log(result, error); });
 
 const serializeVideo = video => ({
     id: video.id,
