@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const videosService = require('./videos-service');
 const cloudinary = require('cloudinary');
+const xss= require('xss');
 
 const videosRouter = express.Router();
 const jsonParser = express.json();
@@ -15,16 +16,13 @@ cloudinary.config({
     api_secret: process.env.cloudinary_api_secret,
 });
 
-cloudinary.v2.uploader.upload(file, 
-    { resource_type: "video"},
-    function(error, result) { console.log(result, error); });
 
 const serializeVideo = video => ({
     id: video.id,
     date_published: video.date_published,
     title: video.title,
     content: video.name,
-    rating: video.rating
+    rating: video.rating,
 });
 
 videosRouter
@@ -38,14 +36,23 @@ videosRouter
             .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const { title, content, rating } = req.body;
-        const newVideo = { title, content, rating };
+        const { title, content, file } = req.body;
+        const newVideo = { title, content, file };
+        
+        cloudinary.v2.uploader.upload(file, 
+            { 
+                resource_type: "video",
+            },
+            function(error, result) { console.log(result, error); 
+            
+            });
 
         for([key, value] of Object.entries(newVideo))
             if(value == null)
                 return res.status(400).json({
                     error: { message: `Missing '${key}' in request` }
                 })
+        
 
         videosService.insertVideos(
             req.app.get('db'),
@@ -56,6 +63,9 @@ videosRouter
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${video.id}`))
                     .json(serializeVideo(video))
+            })
+            .then(data => {
+
             })
             .catch(next)
     })

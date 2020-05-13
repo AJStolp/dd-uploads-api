@@ -8,6 +8,7 @@ const jsonParser = express.json();
 const serializeUser = user => ({
     id: user.id,
     email: user.email,
+    username: user.name,
     password: user.password,
     video_id: user.video_id,
 });
@@ -23,8 +24,8 @@ usersRouter
             .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const { email, password } = req.body;
-        const newUser = { email, password };
+        const { email, password, username } = req.body;
+        const newUser = { email, password, username };
 
         for([key, value] of Object.entries(newUser))
             if(value == null)
