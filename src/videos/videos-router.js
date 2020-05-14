@@ -38,8 +38,8 @@ videosRouter
             .catch(next)
     })
     .post(bodyParser, (req, res, next) => {
-        // const { title, content } = req.body;
-        // const newVideo = { title, content };
+        const { title, content } = req.body;
+        const newVideo = { title, content };
 
         // for([key, value] of Object.entries(newVideo))
         //     if(value == null)
