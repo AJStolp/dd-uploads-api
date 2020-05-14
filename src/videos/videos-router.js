@@ -4,9 +4,10 @@ const express = require('express');
 const videosService = require('./videos-service');
 const cloudinary = require('cloudinary');
 const xss = require('xss');
+const bodyParser = require('body-parser');
 
 const videosRouter = express.Router();
-const jsonParser = express.json();
+
 
 //Cloudinary is used to upload videos and delivery them through a cdn
 
@@ -35,7 +36,7 @@ videosRouter
             })
             .catch(next)
     })
-    .post(jsonParser, (req, res, next) => {
+    .post(bodyParser, (req, res, next) => {
         const { title, content } = req.body;
         const newVideo = { title, content };
 
