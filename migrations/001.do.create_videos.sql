@@ -5,5 +5,6 @@ CREATE TABLE uploaded_videos (
     date_published TIMESTAMPTZ DEFAULT now() NOT NULL,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
+    video TEXT NOT NULL,
     rating star_rating
 );

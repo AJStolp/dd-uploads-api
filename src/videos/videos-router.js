@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const videosService = require('./videos-service');
 const cloudinary = require('cloudinary');
-const xss= require('xss');
+const xss = require('xss');
 
 const videosRouter = express.Router();
 const jsonParser = express.json();
@@ -36,16 +36,8 @@ videosRouter
             .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const { title, content, file } = req.body;
-        const newVideo = { title, content, file };
-        
-        cloudinary.v2.uploader.upload(file, 
-            { 
-                resource_type: "video",
-            },
-            function(error, result) { console.log(result, error); 
-            
-            });
+        const { title, content } = req.body;
+        const newVideo = { title, content };
 
         for([key, value] of Object.entries(newVideo))
             if(value == null)
@@ -58,14 +50,14 @@ videosRouter
             req.app.get('db'),
             newVideo
         )
+        const values = req.files;
+
+        Promise.all(values.map(videos => cloudinary.v2.uploader.upload(videos.path)))
             .then(video => {
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${video.id}`))
                     .json(serializeVideo(video))
-            })
-            .then(data => {
-
             })
             .catch(next)
     })
