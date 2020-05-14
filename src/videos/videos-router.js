@@ -4,10 +4,11 @@ const express = require('express');
 const videosService = require('./videos-service');
 const cloudinary = require('cloudinary');
 const xss = require('xss');
-const bodyParser = require('body-parser');
+const formData = require('express-form-data');
 
 const videosRouter = express.Router();
 
+bodyParser = formData.parse();
 
 //Cloudinary is used to upload videos and delivery them through a cdn
 
@@ -37,20 +38,21 @@ videosRouter
             .catch(next)
     })
     .post(bodyParser, (req, res, next) => {
-        const { title, content } = req.body;
-        const newVideo = { title, content };
+        // const { title, content } = req.body;
+        // const newVideo = { title, content };
 
-        for([key, value] of Object.entries(newVideo))
-            if(value == null)
-                return res.status(400).json({
-                    error: { message: `Missing '${key}' in request` }
-                })
+        // for([key, value] of Object.entries(newVideo))
+        //     if(value == null)
+        //         return res.status(400).json({
+        //             error: { message: `Missing '${key}' in request` }
+        //         })
         
 
         videosService.insertVideos(
             req.app.get('db'),
             newVideo
         )
+        console.log(newVideo);
         const values = req.files;
 
         Promise.all(values.map(videos => cloudinary.v2.uploader.upload(videos.path)))
