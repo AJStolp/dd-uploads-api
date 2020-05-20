@@ -2,22 +2,23 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const videosService = require('./videos-service');
-const cloudinary = require('cloudinary');
 const xss = require('xss');
 const formData = require('express-form-data');
+const { Storage } = require('@google-cloud/storage');
 
 const videosRouter = express.Router();
+const serviceKey = path.join(__dirname, '../MyFirstProject-5f8dfbf03fd0.json');
 
 bodyParser = formData.parse();
 
-//Cloudinary is used to upload videos and delivery them through a cdn
-
-cloudinary.config({
-    cloud_name: process.env.cloudinary_cloud_name,
-    api_key: process.env.cloudinary_api_key,
-    api_secret: process.env.cloudinary_api_secret,
+const storage = new Storage({
+    keyFilename: serviceKey,
+    projectId: 'rosy-sunspot-255301'
 });
 
+// const bucketName = storage.bucket('anthonys-bucket');
+// const fileName = path.basename(localFilePath);
+// const file = bucket.file(fileName);
 
 const serializeVideo = video => ({
     id: video.id,
@@ -38,32 +39,25 @@ videosRouter
             .catch(next)
     })
     .post(bodyParser, (req, res, next) => {
-        const { title, content } = req.body;
-        const newVideo = { title, content };
+        let filename = req.files;
+        let myJSON = JSON.stringify(filename);
+        res 
+            async function uploadFile() {
+            // Uploads a local file to the bucket
+            await storage.bucket(bucketName).upload(myJSON, {
+                gzip: true,
+                metadata: {
+                cacheControl: 'public, max-age=31536000',
+                },
+            });
+            videosService.insertVideos(
+                req.app.get('db'),
+            )
 
-        // for([key, value] of Object.entries(newVideo))
-        //     if(value == null)
-        //         return res.status(400).json({
-        //             error: { message: `Missing '${key}' in request` }
-        //         })
-        
-
-        videosService.insertVideos(
-            req.app.get('db'),
-            newVideo
-        )
-        console.log(newVideo);
-        const values = req.files;
-
-        Promise.all(values.map(videos => cloudinary.v2.uploader.upload(videos.path)))
-            .then(video => {
-                res
-                    .status(201)
-                    .location(path.posix.join(req.originalUrl, `/${video.id}`))
-                    .json(serializeVideo(video))
-            })
-            .catch(next)
-    })
+  console.log(`${myJSON} uploaded to ${bucketName}.`);
+    }
+    uploadFile().catch(console.error);
+})
 
 videosRouter
     .route('/:video_id')
