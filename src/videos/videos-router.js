@@ -4,22 +4,21 @@ const express = require('express');
 const videosService = require('./videos-service');
 const xss = require('xss');
 const formData = require('express-form-data');
-const { Storage } = require('@google-cloud/storage');
+const { GcsFileUpload } = require('gcs-file-upload');
+const fs = require('fs');
 
 const videosRouter = express.Router();
+
+const bodyParser = formData.parse();
+
 const serviceKey = path.join(__dirname, '../MyFirstProject-5f8dfbf03fd0.json');
 
-bodyParser = formData.parse();
+const myBucket = new GcsFileUpload({
+ keyFilename: serviceKey,
+ projectId: 'rosy-sunspot-255301',
+}, "anthonys-bucket")
 
-const storage = new Storage({
-    keyFilename: serviceKey,
-    projectId: 'rosy-sunspot-255301'
-});
-
-// const bucketName = storage.bucket('anthonys-bucket');
-// const fileName = path.basename(localFilePath);
-// const file = bucket.file(fileName);
-
+//XSS
 const serializeVideo = video => ({
     id: video.id,
     date_published: video.date_published,
@@ -27,6 +26,7 @@ const serializeVideo = video => ({
     content: video.name,
     rating: video.rating,
 });
+
 
 videosRouter
     .route('/')
@@ -39,24 +39,26 @@ videosRouter
             .catch(next)
     })
     .post(bodyParser, (req, res, next) => {
-        let filename = req.files;
-        let myJSON = JSON.stringify(filename);
-        res 
-            async function uploadFile() {
-            // Uploads a local file to the bucket
-            await storage.bucket(bucketName).upload(myJSON, {
-                gzip: true,
-                metadata: {
-                cacheControl: 'public, max-age=31536000',
-                },
-            });
-            videosService.insertVideos(
-                req.app.get('db'),
-            )
-
-  console.log(`${myJSON} uploaded to ${bucketName}.`);
-    }
-    uploadFile().catch(console.error);
+        let requestData = req.files.file.path;
+        
+        const myFile = fs.readFileSync(requestData);
+  
+        const correctedPath = path.normalize(myBucket.apiEndpoint + '/' + requestData);
+  
+        const fileMetaData = {
+          originalname: correctedPath,
+          buffer: myFile
+        }
+         
+        myBucket
+          .uploadFile(fileMetaData)
+          .then((data) => {
+            console.log(data)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+            
 })
 
 videosRouter
@@ -69,7 +71,7 @@ videosRouter
         .then(video => {
             if(!video) {
                 return res.status(404).json({
-                    error: { message: `Folder does not exist` }
+                    error: { message: `Video does not exist` }
                 })
             }
             res.video = video;
