@@ -9,7 +9,7 @@ const fs = require('fs');
 
 const videosRouter = express.Router();
 
-const bodyParser = formData.parse();
+const formDataParser = formData.parse();
 
 const serviceKey = path.join(__dirname, '../MyFirstProject-5f8dfbf03fd0.json');
 
@@ -23,8 +23,8 @@ const serializeVideo = video => ({
     id: video.id,
     date_published: video.date_published,
     title: video.title,
-    content: video.name,
-    rating: video.rating,
+    content: video.content,
+    video_url: video.video_url,
 });
 
 
@@ -38,22 +38,45 @@ videosRouter
             })
             .catch(next)
     })
-    .post(bodyParser, (req, res, next) => {
+    .post(formDataParser, (req, res, next) => {
         let requestData = req.files.file.path;
-        
+
+        const { title, content } = req.body;
+        const newVideoInfo = { title, content };
+        console.log(title, content, 'i am title and content');
+        console.log(req.body, 'I am req.body');
+
+        // for([key, value] of Object.entries(newVideoInfo))
+        // if(value == null)
+        //     return res.status(400).json({
+        //         error: { message: `Missing '${key}' in request` }
+        //     })
+
         const myFile = fs.readFileSync(requestData);
-  
-        const correctedPath = path.normalize(myBucket.apiEndpoint + '/' + requestData);
+
+        const videoName = req.files.file.name;
+
   
         const fileMetaData = {
-          originalname: correctedPath,
+          originalname: videoName,
           buffer: myFile
         }
          
         myBucket
           .uploadFile(fileMetaData)
           .then((data) => {
-            console.log(data)
+            const newVideo = {
+              title: title,
+              content: content,
+              video_url: data
+            }
+            // console.log(newVideo, 'I am new video data');
+            
+            videosService.insertVideos(
+              req.app.get('db'),
+              newVideo
+            )
+            res.send({status: "Success!"})
           })
           .catch((err) => {
             console.log(err)

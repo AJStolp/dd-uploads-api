@@ -3,5 +3,5 @@ CREATE TABLE users (
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     username TEXT NOT NULL,
-    video_id INT REFERENCES uploaded_videos(id) ON DELETE CASCADE
+    video_id INT REFERENCES uploaded_video(id) ON DELETE CASCADE
 );
