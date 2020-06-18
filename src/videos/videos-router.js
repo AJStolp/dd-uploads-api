@@ -1,14 +1,17 @@
 require('dotenv').config();
+
 const path = require('path');
 const express = require('express');
 const videosService = require('./videos-service');
+
+const { requireAuth } = require('../middleware/jwt.auth');
 const xss = require('xss');
 const formData = require('express-form-data');
+
 const { GcsFileUpload } = require('gcs-file-upload');
 const fs = require('fs');
 
 const videosRouter = express.Router();
-
 const formDataParser = formData.parse();
 
 const serviceKey = path.join(__dirname, '../MyFirstProject-5f8dfbf03fd0.json');
@@ -38,19 +41,17 @@ videosRouter
             })
             .catch(next)
     })
-    .post(formDataParser, (req, res, next) => {
+    .post(requireAuth, formDataParser, (req, res, next) => {
         let requestData = req.files.file.path;
-
+ 
         const { title, content } = req.body;
-        const newVideoInfo = { title, content };
-        console.log(title, content, 'i am title and content');
-        console.log(req.body, 'I am req.body');
+        const videoData = { title, content };
 
-        // for([key, value] of Object.entries(newVideoInfo))
-        // if(value == null)
-        //     return res.status(400).json({
-        //         error: { message: `Missing '${key}' in request` }
-        //     })
+        for(const [key, value] of Object.entries(videoData))
+        if(value == null)
+            return res.status(400).json({
+                error: { message: `Missing '${key}' in request` }
+            })   
 
         const myFile = fs.readFileSync(requestData);
 
@@ -70,7 +71,6 @@ videosRouter
               content: content,
               video_url: data
             }
-            // console.log(newVideo, 'I am new video data');
             
             videosService.insertVideos(
               req.app.get('db'),
@@ -117,4 +117,5 @@ videosRouter
         })
         .catch(next)
     })
+
 module.exports = videosRouter

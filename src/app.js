@@ -1,11 +1,16 @@
 require('dotenv').config();
+
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
+const logger = require('./logger');
+const authRouter = require('./auth/auth-router');
+
 const usersRouter = require('./users/users.router');
 const videosRouter = require('./videos/videos-router');
+
 
 const app = express();
 
@@ -17,6 +22,7 @@ app.use(cors());
 
 app.use('/api/users', usersRouter);
 app.use('/api/videos', videosRouter);
+app.use('/api/auth', authRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello, world!')
