@@ -79,7 +79,7 @@ videosRouter
 				res.send({ status: "Success!" });
 			})
 			.catch((err) => {
-				console.log(err);
+				err;
 			});
 	});
 
