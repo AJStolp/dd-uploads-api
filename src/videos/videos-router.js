@@ -46,6 +46,7 @@ videosRouter
 	})
 	.post(requireAuth, formDataParser, (req, res, next) => {
 		let requestData = req.files.file.path;
+		let cred = JSON.parse(process.env.GOOGLE_CREDENTIALS),
 
 		const { title, content } = req.body;
 		const videoData = { title, content };
@@ -57,16 +58,15 @@ videosRouter
 				});
 
 		logger.info(`Video with ${title} and ${content} created`);
-		const myFile = fs.readFileSync(requestData);
+		const myFile = fs.readFileSync(requestData, cred);
 
 		const videoName = req.files.file.name;
-
 		const fileMetaData = {
 			originalname: videoName,
 			buffer: myFile,
 		};
-
 		myBucket
+		cred
 		.uploadFile(fileMetaData)
 		.then((data) => {
 			const newVideo = {
@@ -74,7 +74,6 @@ videosRouter
 				content: content,
 				video_url: data,
 			};
-				JSON.parse(process.env.GOOGLE_CREDENTIALS),
 				videosService.insertVideos(req.app.get("db"), newVideo);
 				res.send({ status: "Success!" });
 			})
