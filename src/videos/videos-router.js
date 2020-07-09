@@ -46,7 +46,6 @@ videosRouter
 	})
 	.post(requireAuth, formDataParser, (req, res, next) => {
 		let requestData = req.files.file.path;
-		let cred = JSON.parse(process.env.GOOGLE_CREDENTIALS),
 
 		const { title, content } = req.body;
 		const videoData = { title, content };
@@ -58,9 +57,10 @@ videosRouter
 				});
 
 		logger.info(`Video with ${title} and ${content} created`);
-		const myFile = fs.readFileSync(requestData, cred);
+		const myFile = fs.readFileSync(requestData);
 
 		const videoName = req.files.file.name;
+		
 		const fileMetaData = {
 			originalname: videoName,
 			buffer: myFile,
