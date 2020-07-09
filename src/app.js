@@ -22,8 +22,6 @@ app.use("/api/users", usersRouter);
 app.use("/api/videos", videosRouter);
 app.use("/api/auth", authRouter);
 
-app.use(allowCrossDomain);
-
 app.get("/", (req, res) => {
 	res.send("Hello, world!!!!!!!");
 });
@@ -31,10 +29,9 @@ app.get("/", (req, res) => {
 let allowCrossDomain = function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', "*");
 	res.header('Access-Control-Allow-Headers', "*");
-	console.log(res.header, 'I am res.header')
 	next();
  }
-
+app.use(allowCrossDomain);
 
 app.use(function errorHandling(error, req, res, next) {
 	let response;
