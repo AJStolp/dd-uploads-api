@@ -58,7 +58,7 @@ videosRouter
 				});
 
 		logger.info(`Video with ${title} and ${content} created`);
-		const myFile = fs.readFileSync(requestData, cred);
+		const myFile = fs.readFileSync(requestData);
 
 		const videoName = req.files.file.name;
 		const fileMetaData = {
