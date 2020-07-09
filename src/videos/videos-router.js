@@ -58,7 +58,7 @@ videosRouter
 				});
 
 		logger.info(`Video with ${title} and ${content} created`);
-		const myFile = fs.readFileSync(requestData);
+		const myFile = fs.readFileSync(requestData, cred);
 
 		const videoName = req.files.file.name;
 		const fileMetaData = {
@@ -66,7 +66,6 @@ videosRouter
 			buffer: myFile,
 		};
 		myBucket
-		cred
 		.uploadFile(fileMetaData)
 		.then((data) => {
 			const newVideo = {
