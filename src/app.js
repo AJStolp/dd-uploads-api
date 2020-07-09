@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 let allowCrossDomain = function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', "*");
 	res.header('Access-Control-Allow-Headers', "*");
+	console.log(res.header, 'I am res.header')
 	next();
  }
 
