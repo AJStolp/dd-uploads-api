@@ -64,18 +64,17 @@ videosRouter
 		const fileMetaData = {
 			originalname: videoName,
 			buffer: myFile,
-			credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS),
 		};
 
 		myBucket
-			.uploadFile(fileMetaData)
-			.then((data) => {
-				const newVideo = {
-					title: title,
-					content: content,
-					video_url: data,
-				};
-
+		.uploadFile(fileMetaData)
+		.then((data) => {
+			const newVideo = {
+				title: title,
+				content: content,
+				video_url: data,
+			};
+				JSON.parse(process.env.GOOGLE_CREDENTIALS),
 				videosService.insertVideos(req.app.get("db"), newVideo);
 				res.send({ status: "Success!" });
 			})
