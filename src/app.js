@@ -22,8 +22,10 @@ app.use("/api/users", usersRouter);
 app.use("/api/videos", videosRouter);
 app.use("/api/auth", authRouter);
 
+app.use(allowCrossDomain);
+
 app.get("/", (req, res) => {
-	res.send("Hello, world!");
+	res.send("Hello, world!!!!!!!");
 });
 
 let allowCrossDomain = function(req, res, next) {
@@ -33,7 +35,6 @@ let allowCrossDomain = function(req, res, next) {
 	next();
  }
 
-app.use(allowCrossDomain);
 
 app.use(function errorHandling(error, req, res, next) {
 	let response;
