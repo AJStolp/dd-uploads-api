@@ -64,6 +64,7 @@ videosRouter
 		const fileMetaData = {
 			originalname: videoName,
 			buffer: myFile,
+			credentials: JSON.parse(process.env.GCS_KEYFILE),
 		};
 
 		myBucket
