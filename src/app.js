@@ -26,13 +26,6 @@ app.get("/", (req, res) => {
 	res.send("Hello, world!!!!!!!");
 });
 
-let allowCrossDomain = function(req, res, next) {
-	res.header('Access-Control-Allow-Origin', "*");
-	res.header('Access-Control-Allow-Headers', "*");
-	next();
- }
-app.use(allowCrossDomain);
-
 app.use(function errorHandling(error, req, res, next) {
 	let response;
 	if (NODE_ENV === "production") {
