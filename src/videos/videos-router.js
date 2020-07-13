@@ -20,6 +20,8 @@ const myBucket = new GcsFileUpload(
 	{
 		keyFilename: serviceKey,
 		projectId: "rosy-sunspot-255301",
+		client_email: process.env.client_email,
+		private_key: process.env.private_key.replace(/\\n/g, '\n'),
 	},
 	"anthonys-bucket"
 );
@@ -56,7 +58,6 @@ videosRouter
 					error: { message: `Missing '${key}' in request` },
 				});
 
-		logger.info(`Video with ${title} and ${content} created`);
 		const myFile = fs.readFileSync(requestData);
 
 		const videoName = req.files.file.name;
