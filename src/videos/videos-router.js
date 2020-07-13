@@ -20,10 +20,18 @@ const myBucket = new GcsFileUpload(
 	{
 		keyFilename: serviceKey,
 		projectId: "rosy-sunspot-255301",
-		// credentials: {
-		// 	private_key: process.env.private_key,
-		// 	client_email: process.env.client_email,
-		// }
+		credentials: {
+			private_key: process.env.GOOGLE_APPLICATION_CREDENTAILS.private_key,
+			client_email: process.env.GOOGLE_APPLICATION_CREDENTAILS.client_email,
+			project_id: process.env.GOOGLE_APPLICATION_CREDENTAILS.project_id,
+			private_key_id: process.env.GOOGLE_APPLICATION_CREDENTAILS.private_key_id,
+			private_key: process.env.GOOGLE_APPLICATION_CREDENTAILS.private_key,
+			client_id: process.env.GOOGLE_APPLICATION_CREDENTAILS.client_id,
+			auth_uri: process.env.GOOGLE_APPLICATION_CREDENTAILS.auth_uri,
+			token_uri: process.env.GOOGLE_APPLICATION_CREDENTAILS.token_uri,
+			auth_provider_x509_cert_url: process.env.GOOGLE_APPLICATION_CREDENTAILS.auth_provider_x509_cert_url,
+			client_x509_cert_url: process.env.GOOGLE_APPLICATION_CREDENTAILS.client_x509_cert_url
+		}
 	},
 	"anthonys-bucket"
 );
