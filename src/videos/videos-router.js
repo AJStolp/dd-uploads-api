@@ -14,7 +14,7 @@ const fs = require("fs");
 const videosRouter = express.Router();
 const formDataParser = formData.parse();
 
-const serviceKey = path.join(__dirname, "../google-credentials.json");
+const serviceKey = path.join(__dirname, "../credentials.json");
 
 const myBucket = new GcsFileUpload(
 	{
