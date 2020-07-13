@@ -14,15 +14,14 @@ const fs = require("fs");
 const videosRouter = express.Router();
 const formDataParser = formData.parse();
 
-const serviceKey = path.join(__dirname, "../credentials.json");
+const serviceKey = path.join(__dirname, "../google-credentials.json");
 
 const myBucket = new GcsFileUpload(
 	{
 		keyFilename: serviceKey,
 		projectId: "rosy-sunspot-255301",
-		credentials: {
-			GOOGLE_APPLICATION_CREDENTIALS: serviceKey
-		}
+		// credentials: {
+		// }
 	},
 	"anthonys-bucket"
 );
