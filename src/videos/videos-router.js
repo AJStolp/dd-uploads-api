@@ -21,8 +21,8 @@ const myBucket = new GcsFileUpload(
 		keyFilename: serviceKey,
 		projectId: "rosy-sunspot-255301",
 		credentials: {
-			client_email: process.env.GOOGLE_CREDENTIALS.client_email,
-			private_key: process.env.GOOGLE_CREDENTIALS.private_key,
+			client_email: process.env.GOOGLE_CREDENTIALS,
+			private_key: process.env.GOOGLE_CREDENTIALS,
 		}
 	},
 	"anthonys-bucket"
