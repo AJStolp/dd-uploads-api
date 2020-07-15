@@ -22,7 +22,7 @@ const myBucket = new GcsFileUpload(
 		projectId: "rosy-sunspot-255301",
 		credentials: {
 			client_email: process.env.CLIENT_EMAIL,
-			private_key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
+			private_key: process.env.PRIVATE_KEY,
 		}
 	},
 	"anthonys-bucket"
