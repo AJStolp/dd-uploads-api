@@ -20,7 +20,10 @@ const myBucket = new GcsFileUpload(
 	{
 		keyFilename: serviceKey,
 		projectId: "rosy-sunspot-255301",
-		credentials: {}
+		credentials: {
+			client_email: process.env.client_email,
+			private_key: process.env.private_key,
+		}
 	},
 	"anthonys-bucket"
 );
@@ -47,7 +50,7 @@ videosRouter
 	})
 	.post(requireAuth, formDataParser, (req, res, next) => {
 		let requestData = req.files.file.path;
-
+		console.log(requestData, 'I am request data')
 		const { title, content } = req.body;
 		const videoData = { title, content };
 
