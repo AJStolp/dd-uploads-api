@@ -20,10 +20,10 @@ const myBucket = new GcsFileUpload(
 	{
 		keyFilename: serviceKey,
 		projectId: "rosy-sunspot-255301",
-		credentials: {
-			client_email: process.env.client_email,
-			private_key: process.env.private_key,
-		}
+		// credentials: {
+		// 	client_email: process.env.client_email,
+		// 	private_key: process.env.private_key,
+		// }
 	},
 	"anthonys-bucket"
 );
@@ -63,7 +63,7 @@ videosRouter
 		const myFile = fs.readFileSync(requestData);
 
 		const videoName = req.files.file.name;
-
+		
 		const fileMetaData = {
 			originalname: videoName,
 			buffer: myFile,
