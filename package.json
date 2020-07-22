@@ -15,7 +15,8 @@
   },
   "keywords": [],
   "engines": {
-    "node": "13.11.0"
+    "node": "13.11.0",
+    "npm": "6.14.6"
   },
   "author": "",
   "license": "ISC",
