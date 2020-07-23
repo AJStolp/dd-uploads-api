@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "preinstall" : "node gcpSetup.js",
     "start": "node src/server.js",
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
