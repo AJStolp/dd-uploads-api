@@ -18,7 +18,7 @@ const serviceKey = path.join(__dirname, "../credentials.json");
 
 const myBucket = new GcsFileUpload(
 	{
-		keyFilename: serviceKey,
+		// keyFilename: serviceKey,
 		project_id: "rosy-sunspot-255301",
 	},
 	"anthonys-bucket"
