@@ -46,7 +46,6 @@ videosRouter
 	})
 	.post(requireAuth, formDataParser, (req, res, next) => {
 		let requestData = req.files.file.path;
-		console.log(requestData, 'I am request data')
 		const { title, content } = req.body;
 		const videoData = { title, content };
 
